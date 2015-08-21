@@ -1,11 +1,29 @@
 .tile {
+    &[data-link] {
+        .text {
+            cursor: pointer;
+        }
+    }
+
     .lightbox-link {
         line-height: 100%;
 
-        button {
+        .lightbox-icon {
+            position:relative;
             padding: 0px;
             height:64px;
             width:64px;
+            &:before {
+                font-family: vanilla;
+                content: '\e61a';
+                height: 64px;
+                width: 64px;
+                font-size: 64px;
+                top: -2px;
+                left: -1px;
+                margin-top: 21px;
+                position: absolute;
+            }
         }
     }
     .lightbox-link-title {
@@ -28,6 +46,37 @@
     }
 }
 
+.lightbox-loading {
+    position: fixed!important; // Needs to be fixed otherwise loading layout can be incorrect
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color: @transparency;
+    text-align: center;
+    display:none;
+    z-index: 548;
+    
+    .no-opacity & {
+        background-image: @transparency-fallback-png;
+    }
+
+    .loader-gif {
+        background-image: url(assets/ajax-loader.gif);
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 128px;
+        height: 128px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -64px;
+        margin-left: -64px;
+        .item-title;
+    }
+}
+
+
 .lightbox-container {
 	visibility: hidden;
 	position: fixed;
@@ -37,12 +86,12 @@
 	width: 100%;
     overflow-y: hidden;
     overflow-x: hidden;
-    z-index:6000;
+    z-index:549;
 
-    background-color: @transparency;
+    /*background-color: @transparency;
     .no-opacity & {
         background-image: @transparency-fallback-png;
-    }
+    }*/
 
     .lightbox-popup {
         z-index:550;
@@ -54,6 +103,12 @@
             .block {
                 background-color: transparent;
             }
+        }
+
+        .lightbox-popup-inner {
+            position:relative;
+            max-width: 1024px;
+            margin: auto;
         }
     }
 
@@ -82,9 +137,6 @@
 }
 
 .tile {
-    .lightbox-link {
-        line-height: 100%;
-    }
     .lightbox-link-center {
         position: absolute;
         top: 22%;

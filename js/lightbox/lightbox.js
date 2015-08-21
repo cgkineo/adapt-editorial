@@ -29,6 +29,7 @@ define([
                 }
 
                 this.$el.addClass(linkId);
+                this.$el.attr("data-link", linkId);
 
                 this.updateProgressBars();
             }),
@@ -63,6 +64,7 @@ define([
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
 
                 this.$("button[data-link]").on("click", this._onLinkClick);
+                this.$(".text").on("click", this._onLinkClick);
                 $lightboxContainer.find(".close-button").on("click", this._onCloseClick);
 
             }),
@@ -71,7 +73,14 @@ define([
                 if (this._lightboxOpen) return;
 
                 $('video,audio').trigger('pause');
-                $(".loading").show();
+
+                if (!this._disableAnimations) {
+                    $(".lightbox-loading").velocity({"opacity":1},{"duration":0}).show();
+                } else {
+                    $(".lightbox-loading").css({
+                        "display": "block"
+                    });
+                }
 
                 this._lightboxHasSized = false;
                 this._lightboxCurrentOffsetTop = 0;
@@ -143,10 +152,7 @@ define([
                                 "opacity": 1
                             },{
                                 "delay": 100,
-                                "duration": this._animationDuration,
-                                "complete": function() {
-                                    $(".loading").hide();
-                                }
+                                "duration": this._animationDuration
                             });
 
                         } else {
@@ -154,8 +160,6 @@ define([
                             $lightboxContainer.css({
                                 "visibility": "visible"
                             });
-
-                            $(".loading").hide();
 
                         }                
 
@@ -241,9 +245,13 @@ define([
 
                 $lightboxPopup.off("resize", this._resizeLightbox);
 
+
+
                 if (!this._disableAnimations) {  
 
-                    $lightboxContainer.velocity("stop").velocity({
+                    var $anim = $($lightboxContainer).add($(".lightbox-loading"));
+
+                    $anim.velocity("stop").velocity({
                         "opacity": 0
                     },{
                         "duration": this._animationDuration,
@@ -257,9 +265,16 @@ define([
                 }
 
                 function complete() {
+
+                    $(".lightbox-loading").css({
+                        "display": "none"
+                    });
+
                     $lightboxContainer.css({
                         "visibility": ""
                     });
+
+                    Adapt.trigger("close");
 
                     Adapt.trigger('popup:closed');
                     $('body').scrollEnable();
@@ -310,6 +325,7 @@ define([
                 delete this._onCloseClick;
 
                 this.$("button[data-link]").off("click", this._onLinkClick);
+                this.$(".text").off("click", this._onLinkClick);
                 delete this._onLinkClick;
             })
 
@@ -334,3 +350,4 @@ define([
     return LightboxTile;
 
 });
+

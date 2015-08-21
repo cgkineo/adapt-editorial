@@ -12,8 +12,9 @@ define([
     var $lightbox;
 
     Adapt.on("app:dataReady", function() {
-        $lightbox = $(Handlebars.templates['e-lightbox']({}));
-        $("body").append($lightbox);
+        $lightboxDivs = $(Handlebars.templates['e-lightbox']({}));
+        $("body").append($lightboxDivs);
+        $lightbox = $lightboxDivs.filter(".lightbox-container");
     });
     /*  
         Here we are extending the articleView and articleModel in Adapt.

@@ -1,7 +1,7 @@
 <div class="tile-inner">
 	<div class="content clearfix">
 	{{#if _hasText}}
-		<div class="text top">
+		<div class="text top" {{#if _linkId}}data-link="{{_linkId}}"{{/if}}>
 			{{> e-text this}}
 		</div>
 	{{/if}}
@@ -71,7 +71,7 @@
 			</div>
 		</div>
 	{{#if _hasText}}
-		<div class="text bottom">
+		<div class="text bottom" {{#if _linkId}}data-link="{{_linkId}}"{{/if}}>
 			{{> e-text this}}
 		</div>
 	{{/if}}

@@ -1,17 +1,23 @@
-<div class="lightbox-container clearfix notify">
-	<div class="lightbox-popup">
-		
-	    <div class="article-block-container">
-	    	<div class="background-image">
-				<div class="offset">
-					<img src="">
+<div class="lightbox-loading">
+    <div class="loader-gif">
+    	<div role="heading" tabindex="0" class="h3" aria-level="1">Loading...</div>
+    </div>
+</div>
+<div class="lightbox-container clearfix notify">	
+	<div class="lightbox-popup" aria-label="{{_globals._accessibility._ariaLabels.feedbackPopUp}}">
+		<div class="lightbox-popup-inner">
+		    <div class="article-block-container">
+		    	<div class="background-image">
+					<div class="offset">
+						<img src="">
+					</div>
 				</div>
-			</div>
 
-			{{!-- the article containers and blocks live here --}}
-	    </div>
-	    <button class="close-button" aria-label="{{_globals._accessibility._ariaLabels.closePopup}}">
-           <div class="notify-popup-icon-close icon icon-cross"></div>
-        </button>
+				{{!-- the article containers and blocks live here --}}
+		    </div>
+		    <button class="close-button" aria-label="{{_globals._accessibility._ariaLabels.closePopup}}">
+	           <div class="notify-popup-icon-close icon icon-cross"></div>
+	        </button>
+        </div>
     </div>
 </div>
