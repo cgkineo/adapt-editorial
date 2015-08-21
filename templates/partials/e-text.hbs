@@ -1,0 +1,37 @@
+<div class="background"></div>
+<div class="text-inner">
+	{{#if title}}
+		<div class="title" aria-level="4" tabindex="0">
+			{{#if _linkId}}
+				<div class="lightbox-link lightbox-link-title display-none">
+					<button data-link="{{_linkId}}">{{_linkText}}</button>
+				</div>
+			{{/if}}
+			<div class="title-text">{{{title}}}</div>
+		</div>
+	{{/if}}
+	{{#if body}}
+		<div class="body">
+			{{{a11y_text body}}}
+		</div>
+	{{/if}}
+	{{#if instruction}}
+		<div class="instruction">
+			{{{a11y_text instruction}}}
+		</div>
+	{{/if}}
+	{{#if _linkId}}
+		<div class="lightbox-link-progress-container">
+			<div class="lightbox-link-progress"><div class="lightbox-link-progress-bar"></div></div>
+		</div>
+		<div class="lightbox-link lightbox-link-center display-none">
+			<button data-link="{{_linkId}}">{{_linkText}}</button>
+			{{#if _linkInstruction}}
+				<br />
+				<hr />
+				<span class="lightbox-link-instruction">{{_linkInstruction}}</span>
+			{{/if}}
+		</div>
+		
+	{{/if}}
+</div>

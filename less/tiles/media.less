@@ -1,0 +1,234 @@
+//stylistic
+.tile.media {
+
+	.text-inner {
+		padding: 18px;
+	}
+
+	.title > * {
+	    display: inline-block;
+	    vertical-align: middle;
+	}
+		
+	.title {
+    	font-size: 26px;
+		font-weight: 300;
+    	line-height: 120%;
+    	padding: 0 0 20px 0;
+    	color: @primary-color-inverted;
+	}
+	
+	.body {
+		font-size: larger;
+		line-height: 120%;
+		padding: 0 0 20px 0;
+		color: @primary-color-inverted;
+	}
+	.instruction {
+		font-weight: bold;
+		line-height: 120%;
+		padding: 0 0 20px 0;
+		color: @primary-color-inverted;
+	}
+
+	.background {
+		background-color: @primary-color;
+	}
+
+}
+
+//structural content
+.tile.media {
+
+	.text {
+		position:relative;
+		z-index:1;
+	}
+	
+	.title {
+    	position: relative;
+	}
+
+	.body {
+		position: relative;
+	}
+
+	.instruction {
+		position: relative;
+	}
+
+	.background {
+		position:absolute;
+		top:0px;
+		left:0px;
+		bottom:0px;
+		right:0px;
+	}
+
+}
+
+//structual layout rules
+.tile.media {
+
+	&[showtext='false'] {
+		.text.bottom {
+			display: none;
+		}
+
+		.text.top {
+			display: none;
+		}
+	}
+
+	&[showtext='true'] {
+
+		&[textposition="left"],
+		&[textposition="top"] {
+			.text.bottom {
+				display: none;
+			}
+		}
+
+		&[textposition="bottom"],
+		&[textposition="right"] {
+			.text.top {
+				display: none;
+			}
+		}
+
+		&[textposition="right"], 
+		&[textposition="left"] {
+
+			.text {
+				width: 40%;
+			    top: 0;
+			    bottom: 0;
+				display:inline-block;
+			}
+
+			.media {
+			    top: 0;
+			    bottom: 0;
+			    width: 60%;
+			}
+
+		}
+
+		&[textposition="top"], 
+		&[textposition="bottom"] {
+
+			.text {
+				width: 100%;
+				display:block;
+			}
+
+			.media {
+			    width: 100%;
+			    display:block;
+			}
+		}
+
+		&[textrounded="true"] {
+
+			&[textposition="right"] {
+				.background {
+					border-radius: 0 8px 8px 0;
+				}
+			}
+
+			&[textposition="left"] {
+				.background {
+					border-radius: 8px 0 0 8px;
+				}
+			}
+
+			&[textposition="top"] {
+				.background {
+					border-radius: 8px 8px 0 0;
+				}
+			}
+
+			&[textposition="bottom"] {
+				.background {
+					border-radius: 0 0 8px 8px;
+				}
+			}
+
+		}
+
+		&[textposition="right"] {
+
+			&[textbigger="false"] {
+				.media {
+					float:left;
+				}
+				.text {
+					position: absolute;
+				    right: 0;
+				}
+			}
+
+			&[textbigger="true"] {
+				.media {
+					left: 0;
+				    position: absolute;
+				}
+				.text {
+					float:right;
+				}
+			}
+		}
+
+		&[textposition="left"] {
+
+			&[textbigger="false"] {
+				.media {
+					float:right;
+				}
+				.text {
+					position: absolute;
+				    left: 0;
+				}
+			}
+
+			&[textbigger="true"] {
+				.media {
+					right: 0;
+				    position: absolute;
+				}
+				.text {
+					float:left;
+				}
+			}
+
+		}
+
+		&[textoverlay='true'] {
+			
+			&[textposition="top"] {
+				.text {
+					position: absolute;
+					top: 0px;
+				}
+			}
+
+			&[textposition="bottom"] {
+				.text {
+					display: block;
+					position: absolute;
+					bottom: 0px;
+				}
+			}
+
+			&[textposition="right"], 
+			&[textposition="left"] {
+				.media {
+					width: 100%;
+				}
+			}
+
+		}
+
+	}
+
+}

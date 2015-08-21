@@ -1,0 +1,118 @@
+.tile {
+    .lightbox-link {
+        line-height: 100%;
+
+        button {
+            padding: 0px;
+            height:64px;
+            width:64px;
+        }
+    }
+    .lightbox-link-title {
+        
+    }
+    .lightbox-link-center {
+        hr {
+            width: 12%;
+            left: 44%;
+            height: 5px;
+            color: @primary-color-inverted;
+            background-color: @primary-color-inverted;
+        }
+        .lightbox-link-instruction {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+            color: @primary-color-inverted;
+        }
+    }
+}
+
+.lightbox-container {
+	visibility: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    z-index:6000;
+
+    background-color: @transparency;
+    .no-opacity & {
+        background-image: @transparency-fallback-png;
+    }
+
+    .lightbox-popup {
+        z-index:550;
+        max-height: 100%;
+        max-width: 100%;
+        overflow-y: auto;
+        position: relative;
+        &.has-background {
+            .block {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .article-block-container {
+        max-width: 100%;
+        position:relative;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    .background-image {
+        position:absolute;
+        top:0px;
+        left:0px;
+        overflow:hidden;
+        height: 100%;
+        width: 100%;
+        img {
+            max-width: none;
+        }
+    }
+}
+
+.tile {
+    .lightbox-link {
+        line-height: 100%;
+    }
+    .lightbox-link-center {
+        position: absolute;
+        top: 22%;
+        margin-top: -28px;
+        left: 0px;
+        width: 100%;
+        text-align: center;
+
+        hr {
+            position: relative;
+            border: none;
+        }
+    }
+    .lightbox-link-progress-container {
+        height: 16px;
+        .lightbox-link-progress {
+            position: absolute;
+            border: 2px solid white;
+            height: 8px;
+            width: 100px;
+            right: 16px;
+            bottom: 16px;
+            border-radius: 6px;
+            .lightbox-link-progress-bar {
+                height: 8px;
+                width: 0%;
+                background-color: white;
+            }
+        }
+    }
+}

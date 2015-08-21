@@ -1,0 +1,19 @@
+{
+  "name": "adapt-editorial",
+  "version": "2.0.0",
+  "framework": "^2.0.0",
+  "homepage": "https://github.com/cgkineo/adapt-editorial",
+  "authors": [
+    "Oliver Foster <oliver.foster@kineo.com>"
+  ],
+  "displayName" : "Editorial",
+  "extension" : "editorial",
+  "description": "An extension which attaches to an article object produce and editorial style layout",
+  "main": "/js/adapt-editorialArticleExtension.js",
+  "keywords": [
+    "adapt-plugin",
+    "adapt-extension"
+  ],
+  "license": "GPLv3",
+  "targetAttribute": "_editorial"
+}

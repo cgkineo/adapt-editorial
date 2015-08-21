@@ -1,0 +1,41 @@
+//stylistic
+.tile.image {
+
+}
+
+
+//structural
+.tile.image {
+
+	.media {
+		overflow:hidden;
+	}
+
+	.image {
+		position: relative;
+		img {
+			width: 100%;
+			position: relative;
+		}
+	}
+
+	.offset {
+		position: relative;
+		width: 100%;
+		height:100%;
+	}
+
+}
+
+//fixes
+.ie8 .tile.image[textbigger="true"] { //ie8 stretches image height
+
+	.image {
+		img {
+			border:0;
+			-ms-interpolation-mode:bicubic;
+			width: auto;
+		}
+	}
+
+}

@@ -1,0 +1,27 @@
+<div class="editorial-container clearfix">
+
+	<div class="clearfix tile-container primary" data-editorial="{{_id}}">
+		{{!-- tiles go here --}}
+	</div>
+
+	<style class="style" type="text/css">
+		{{!-- turn of all animations on tiles --}}
+		.{{_id}} .editorial-container * {
+			transition-duration: 0;
+			transition-property: all;
+			transition-timing-function: ease;
+		}
+
+		{{!-- setup primary grid layout styling for this article here --}}
+	{{#each _editorialModel.attributes._columnStyleRules}}
+		.{{../_id}} .tile-container[spanColumns='{{_columnWidth}}'] > .tile[spanColumns='{{_spanColumns}}'] {
+			{{#if _displayNone}}
+				display:none;
+			{{else}}
+				width: {{_width}}%;
+			{{/if}}
+		}
+
+	{{/each}}
+	</style>
+</div>

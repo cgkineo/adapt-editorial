@@ -1,0 +1,10 @@
+<div class="authoring-tile {{_type}} {{_id}}" data-editorial="{{_id}}">
+	<div class="authoring-dropzone" data-editorial="{ '_id': '{{_id}}', '_placement': 'before'}"></div>
+	{{_id}}
+	{{#if_value_equals _type "group"}}
+	<div class="authoring-tile-container authoring-dropzone {{_id}}" data-editorial="{ '_id': '{{_id}}', '_placement': 'prepend'}">
+
+	</div>
+	{{/if_value_equals}}
+	<div class="authoring-dropzone bottom" data-editorial="{ '_id': '{{_id}}', '_placement': 'after'}"></div>
+</div>
