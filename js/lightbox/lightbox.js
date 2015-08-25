@@ -10,7 +10,7 @@ define([
 
             _disableAnimations: false,
             _lightboxOpen: false,
-            _lightboxBlockId: "",
+            _lightboxId: "",
             _lightboxBackground: false,
             _lightboxFullsize: false,
             _lightboxHasSized: false,
@@ -34,25 +34,6 @@ define([
                 this.updateProgressBars();
             }),
 
-            getCalculatedStyleObject: Backbone.callParents("getCalculatedStyleObject", function(styleObject) {
-                var styleObject = this.model.toJSON();
-                
-                var linkId = this.model.get("_linkId");
-                if (!linkId) return;
-                
-                switch (styleObject._linkStyle) {
-                case "title":
-                    this.$(".lightbox-link-title").removeClass("display-none")
-                    this.$(".lightbox-link-center").addClass("display-none");
-                    break;
-                case "center":
-                    this.$(".lightbox-link-title").addClass("display-none")
-                    this.$(".lightbox-link-center").removeClass("display-none");
-                    break;
-                }
-            }),
-
-
             postRender: Backbone.callParents("postRender", function() {
                 var linkId = this.model.get("_linkId");
                 if (!linkId) return;
@@ -60,6 +41,10 @@ define([
                 this._onLinkClick = _.bind(this.onLinkClick, this);
                 this._onCloseClick = _.bind(this.onCloseClick, this);
                 this._resizeLightbox = _.bind(this.resizeLightbox, this);
+                this._forceResizeLightbox = _.bind(function() {
+                    this._forceResize = true;
+                    this.resizeLightbox();
+                }, this);
 
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
 
@@ -74,6 +59,9 @@ define([
 
                 $('video,audio').trigger('pause');
 
+                $(".lightbox-loading .loader-gif").css({
+                    "display": "block"
+                });
                 if (!this._disableAnimations) {
                     $(".lightbox-loading").velocity({"opacity":1},{"duration":0}).show();
                 } else {
@@ -89,30 +77,44 @@ define([
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
                 var $lightboxPopup = $lightboxContainer.find(".lightbox-popup");
                 var $backgroundImage = $lightboxContainer.find(".background-image");
-                var $article = $lightboxContainer.find('[name="'+this.model.get("_id")+'"]');
+                var $article = $lightboxContainer.find('[name="'+this.model.get("_editorialId")+'"]');
                 var $button = $(event.currentTarget);
                 
-                this._lightboxBlockId = $button.attr("data-link");
+                this._lightboxId = $button.attr("data-link");
 
-                var $block = $lightboxContainer.find("."+this._lightboxBlockId);
-                var blockModel = Adapt.findById(this._lightboxBlockId);
+                var $linkElement = $lightboxContainer.find("."+this._lightboxId);
+                var linkModel = Adapt.findById(this._lightboxId);
+                var linkType = linkModel.get("_type");
 
-                this._lightboxBackground = blockModel.get("_background");
+                this._lightboxBackground = linkModel.get("_background");
 
-                $article.css({
-                    "display": "block"
-                }).siblings().css({
-                    "display": "none"
-                });
-
-                $block.css({
-                    "display": "block"
-                }).siblings().css({
-                    "display": "none"
-                });
-
-                $(window).resize();
-                $(window).on("resize", this._resizeLightbox);
+                switch (linkType) {
+                case "block":
+                    $article.css({
+                        "display": "block"
+                    }).siblings(":not(.background-image)").css({
+                        "display": "none"
+                    });
+                    $linkElement.css({
+                        "display": "block"
+                    }).siblings().css({
+                        "display": "none"
+                    });
+                    break;
+                case "article":
+                    $linkElement.css({
+                        "display": "block"
+                    }).siblings(":not(.background-image)").css({
+                        "display": "none"
+                    });
+                    $linkElement.find(".block").css({
+                        "display": "block"
+                    });
+                    $linkElement.siblings(":not(.background-image)").find(".block").css({
+                        "display": "none"
+                    });
+                    break;
+                }
 
                 if (!this._disableAnimations) {
                     $lightboxContainer.css({
@@ -136,15 +138,25 @@ define([
                 }
 
                 function complete() {
-                    this._lightboxOpen = true;
+
+                    $articleBlockContainer = $lightboxContainer.find(".article-block-container");
 
                     this._forceResize = true;
-                    this.resizeLightbox();
+                    $(window).resize();
+                    $(window).on("resize", this._resizeLightbox);
 
-                    _.defer(_.bind(function() {
+                    this._lightboxOpen = true;
 
+                    _.delay(_.bind(function() {
 
-                        $lightboxPopup.on("resize", this._resizeLightbox);
+                        $(".lightbox-loading .loader-gif").css({
+                            "display": "none"
+                        });
+
+                        this._forceResize = true;
+                        this.resizeLightbox();
+
+                        $articleBlockContainer.on("resize", this._forceResizeLightbox);
 
                         if (!this._disableAnimations) {
 
@@ -166,7 +178,7 @@ define([
                         Adapt.trigger('popup:opened',$lightboxPopup);
                         $('body').scrollDisable();
 
-                    }, this));
+                    }, this), 250);
                 }
 
             },
@@ -180,34 +192,36 @@ define([
                 this._forceResize = false;
 
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
-                var $block = $lightboxContainer.find("."+this._lightboxBlockId);
+                var $linkElement = $lightboxContainer.find("."+this._lightboxId);
                 var $lightboxPopup = $lightboxContainer.find(".lightbox-popup");
                 var $backgroundImage = $lightboxContainer.find(".background-image");
                 var $backgroundImageTag = $backgroundImage.find("img");
 
-                var blockHeight = $block.outerHeight();
+                var linkAreaHeight = $linkElement.outerHeight();
                 var availableHeight = $lightboxContainer.height();
                 var navigationHeight = $(".navigation").outerHeight();
                 var contentMiddle = (availableHeight) / 2;
-                var blockOffsetTop = (contentMiddle - (blockHeight / 2));
+                var linkAreaOffsetTop = (contentMiddle - (linkAreaHeight / 2));
 
-                $backgroundImage.backgroundImage({
-                    "size": this._lightboxBackground._size,
-                    "position": this._lightboxBackground._position,
-                    "restrict": this._lightboxBackground._restrict
-                });
+                if (this._lightboxBackground) {
+                    $backgroundImage.backgroundImage({
+                        "size": this._lightboxBackground._size,
+                        "position": this._lightboxBackground._position,
+                        "restrict": this._lightboxBackground._restrict
+                    });
+                }
 
                 if (this._lightboxHasSized && this._lightboxCurrentAvailableHeight === availableHeight) {
                     if (this._lightboxFullsize) return;
-                    if (!this._lightboxFullsize && availableHeight >= this._lightboxCurrentOffsetTop + blockHeight) return;
+                    if (!this._lightboxFullsize && availableHeight >= this._lightboxCurrentOffsetTop + linkAreaHeight) return;
                 }
 
                 this._lightboxHasSized = true;
                 this._lightboxFullsize = false;
-                this._lightboxCurrentOffsetTop = blockOffsetTop;
+                this._lightboxCurrentOffsetTop = linkAreaOffsetTop;
                 this._lightboxCurrentAvailableHeight = availableHeight;
 
-                if (availableHeight < blockHeight) {
+                if (availableHeight < linkAreaHeight) {
                     $lightboxPopup.css({
                         "top": "0px",
                         "bottom": "0px",
@@ -217,12 +231,12 @@ define([
                     return;
                 }
 
-                $block.css({
+                $linkElement.css({
                     "min-height": "100%"
                 })
                 
                 $lightboxPopup.css({
-                    "top": blockOffsetTop + "px",
+                    "top": linkAreaOffsetTop + "px",
                     "bottom": "",
                     "overflow-y": "hidden"
                 });
@@ -241,9 +255,9 @@ define([
                 this._lightboxOpen = false;
                 
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
-                var $lightboxPopup = $lightboxContainer.find(".lightbox-popup");
+                var $articleBlockContainer = $lightboxContainer.find(".article-block-container");
 
-                $lightboxPopup.off("resize", this._resizeLightbox);
+                $articleBlockContainer.off("resize", this._forceResizeLightbox);
 
 
 
@@ -287,8 +301,8 @@ define([
                 if (!linkId) return;
 
 
-                var blockModel = Adapt.findById(linkId);
-                var componentModels = blockModel.findDescendants("components");
+                var linkModel = Adapt.findById(linkId);
+                var componentModels = linkModel.findDescendants("components");
                 componentModels = new Backbone.Collection(componentModels.where({
                     "_isAvailable": true
                 }));
@@ -311,6 +325,24 @@ define([
                 if (!this._lightboxOpen) return;
                 if (!$(window).haveDimensionsChanged(this._windowDimensions)) return;
                 this.resizeLightbox();
+            }),
+
+            getCalculatedStyleObject: Backbone.callParents("getCalculatedStyleObject", function(styleObject) {
+                var styleObject = this.model.toJSON();
+                
+                var linkId = this.model.get("_linkId");
+                if (!linkId) return;
+                
+                switch (styleObject._linkStyle) {
+                case "title":
+                    this.$(".lightbox-link-title").removeClass("display-none")
+                    this.$(".lightbox-link-center").addClass("display-none");
+                    break;
+                case "center":
+                    this.$(".lightbox-link-title").addClass("display-none")
+                    this.$(".lightbox-link-center").removeClass("display-none");
+                    break;
+                }
             }),
 
             onRemove: Backbone.callParents("onRemove", function() {

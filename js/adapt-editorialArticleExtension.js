@@ -5,6 +5,7 @@ define([
     './adapt-editorialArticleView',
     './adapt-editorialArticleModel',
     './authoringmode/authoringMode',
+    './adapt-editorialPageExtension',
     './tiles/tiles'
 ], function(Adapt, ArticleView, ArticleModel, ExtensionView, ExtensionModel, AuthoringMode) {
 
@@ -25,7 +26,7 @@ define([
     //Extends core/js/views/articleView.js
     var ViewInitialize = ArticleView.prototype.initialize;
     ArticleView.prototype.initialize = function(options) {
-        if (this.model.get("_editorial")) {
+        if (this.model.get("_editorial") && !this.model.get("_editorial")._isLightbox) {
             //extend the articleView with new functionality
             _.extend(this, ExtensionView);
             this.$lightbox = $lightbox;
@@ -40,7 +41,7 @@ define([
     //Extends core/js/models/articleModel.js
     var ModelInitialize = ArticleModel.prototype.initialize;
     ArticleModel.prototype.initialize = function(options) {
-        if (this.get("_editorial")) {
+        if (this.get("_editorial") && !this.get("_editorial")._isLightbox) {
             //extend the articleModel with new functionality
             _.extend(this, ExtensionModel);
 

@@ -87,12 +87,7 @@
     overflow-y: hidden;
     overflow-x: hidden;
     z-index:549;
-
-    /*background-color: @transparency;
-    .no-opacity & {
-        background-image: @transparency-fallback-png;
-    }*/
-
+    
     .lightbox-popup {
         z-index:550;
         max-height: 100%;
@@ -101,6 +96,9 @@
         position: relative;
         &.has-background {
             .block {
+                background-color: transparent;
+            }
+            .article {
                 background-color: transparent;
             }
         }
