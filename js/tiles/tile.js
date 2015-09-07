@@ -128,7 +128,6 @@ define([
             preResize: function() {
                 this.setupGridVariables();
                 _.defer(_.bind(this.onResize, this));
-                //this.onResize();
             },
 
             onResize: function() {

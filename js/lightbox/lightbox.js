@@ -86,7 +86,8 @@ define([
                 var linkModel = Adapt.findById(this._lightboxId);
                 var linkType = linkModel.get("_type");
 
-                this._lightboxBackground = linkModel.get("_background");
+                this._lightbox = linkModel.get("_lightbox");
+                this._lightboxBackground = this._lightbox._background;
 
                 switch (linkType) {
                 case "block":
@@ -221,7 +222,7 @@ define([
                 this._lightboxCurrentOffsetTop = linkAreaOffsetTop;
                 this._lightboxCurrentAvailableHeight = availableHeight;
 
-                if (availableHeight < linkAreaHeight) {
+                if (availableHeight < linkAreaHeight || this._lightbox._fullsize) {
                     $lightboxPopup.css({
                         "top": "0px",
                         "bottom": "0px",

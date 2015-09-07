@@ -2,32 +2,51 @@
     &[data-link] {
         .text {
             cursor: pointer;
+            .no-touch &:hover {
+                .icon-default {
+                    display: none;
+                }
+                .icon-hover {
+                    display: block;
+                }
+            }
         }
     }
 
     .lightbox-link {
         line-height: 100%;
+        display: inline-block;
 
         .lightbox-icon {
             position:relative;
             padding: 0px;
-            height:64px;
-            width:64px;
-            &:before {
-                font-family: vanilla;
-                content: '\e61a';
-                height: 64px;
-                width: 64px;
-                font-size: 64px;
-                top: -2px;
-                left: -1px;
-                margin-top: 21px;
-                position: absolute;
+            height:40px;
+            width:40px;
+            background-color: transparent;
+            // &:before {
+            //     font-family: vanilla;
+            //     content: '\e61a';
+            //     height: 64px;
+            //     width: 64px;
+            //     font-size: 64px;
+            //     top: -2px;
+            //     left: -1px;
+            //     margin-top: 21px;
+            //     position: absolute;
+            // }
+            .icon-default {
+                display: block;
+            }
+            .icon-hover {
+                display: none;
             }
         }
     }
     .lightbox-link-title {
         
+    }
+    .title-text {
+        display: inline-block;
     }
     .lightbox-link-center {
         hr {

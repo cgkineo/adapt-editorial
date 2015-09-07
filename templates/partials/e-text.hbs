@@ -4,7 +4,7 @@
 		<div class="title" aria-level="4" tabindex="0">
 			{{#if _linkId}}
 				<div class="lightbox-link lightbox-link-title display-none">
-					<button class="lightbox-icon">{{_linkText}}</button>
+					<button class="lightbox-icon">{{#if _iconGraphic}}<img class="icon-default" src="{{{_iconGraphic.src}}}"><img class="icon-hover" src="{{{_iconGraphic.hoverSrc}}}">{{else}}{{_linkText}}{{/if}}</button>
 				</div>
 			{{/if}}
 			<div class="title-text">{{{title}}}</div>

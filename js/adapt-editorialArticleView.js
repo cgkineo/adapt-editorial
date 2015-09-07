@@ -33,12 +33,14 @@ define([
         setupEditorialEventListeners: function() {
             this.listenToOnce(Adapt, "remove", this.onRemoveEditorial);
             this.listenTo(Adapt, "device:resize", this.onResizeEditorial);
+            this.listenTo(Adapt, "device:change", this.onResizeEditorial);
             this.on("tileView:ready", this.onEditorialTileReady);
         },
 
         addChildren: function() {
             var $articleBlockContainer = this.$lightbox.find(".article-block-container");
-            var $blockContainer = $('<div name="' + this.model.get("_id") + '"></div>' );
+            var $blockContainer = $articleBlockContainer.find("[name='"+ this.model.get("_id")+"']");
+            if ($blockContainer.length === 0) $blockContainer = $('<div name="' + this.model.get("_id") + '"></div>' );
             $articleBlockContainer.append( $blockContainer )
             var nthChild = 0;
             var children = this.model.getChildren();
@@ -145,7 +147,17 @@ define([
 
                 if (!this.setupEditorialPrimaryTileColumnWidth()) return;
 
+
+                var style = this.$("style").remove(); //ios fix - remove and readd the styling
+                this.$el.append(style); //ios fix
+
                 this.trigger("resize");
+
+                _.defer(_.bind(function() {
+                    this.$(".editorial-container").css({
+                        "visibility": ""
+                    }); //ie8 hide until finished fix
+                }, this));
 
             }, this));
         },
