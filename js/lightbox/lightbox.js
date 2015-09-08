@@ -196,22 +196,27 @@ define([
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
                 var $linkElement = $lightboxContainer.find("."+this._lightboxId);
                 var $lightboxPopup = $lightboxContainer.find(".lightbox-popup");
+                var $lightboxPopupBackground = $lightboxContainer.find(".lightbox-popup-background");
                 var $lightboxPopupInner = $lightboxContainer.find(".lightbox-popup-inner");
                 var $backgroundImage = $lightboxContainer.find(".background-image");
                 var $backgroundImageTag = $backgroundImage.find("img");
 
                 var linkAreaHeight = $linkElement.outerHeight();
+                
+
+                if (this._lightbox._minHeight && this._lightbox._minHeight["_"+Adapt.device.screenSize]) {
+                    if (this._lightbox._minHeight["_"+Adapt.device.screenSize] === "100%") {
+                        this._lightbox._fullscreen = true;
+                    } else {
+                        this._lightbox._fullscreen = false;
+                        linkAreaHeight = parseInt(this._lightbox._minHeight["_"+Adapt.device.screenSize]);
+                    }
+                }
+
                 var availableHeight = $lightboxContainer.height();
                 var navigationHeight = $(".navigation").outerHeight();
                 var contentMiddle = (availableHeight) / 2;
                 var linkAreaOffsetTop = (contentMiddle - (linkAreaHeight / 2));
-
-
-                if (this._lightboxHasSized && this._lightboxCurrentAvailableHeight === availableHeight && !this._lightbox._fullscreen) {
-                    if (this._lightboxFullsize) return;
-                    if (!this._lightboxFullsize && availableHeight >= this._lightboxCurrentOffsetTop + linkAreaHeight) return;
-                }
-
 
                 this._lightboxHasSized = true;
                 this._lightboxFullsize = false;
@@ -220,6 +225,9 @@ define([
 
                 if (availableHeight < linkAreaHeight || this._lightbox._fullscreen) {
 
+                    $lightboxPopupBackground.css({
+                        "height": ""
+                    });
                     $lightboxPopup.css({
                         "top": "0px",
                         "bottom": "0px",
@@ -229,6 +237,7 @@ define([
                     $lightboxPopupInner.css({
                         "min-height": "100%"
                     });
+
                     this._lightboxFullsize = true;
                     
                 } else {
@@ -246,6 +255,11 @@ define([
 
                     $lightboxPopupInner.css({
                         "min-height": ""
+                    });
+
+                    $lightboxPopupBackground.css({
+                        "height": linkAreaHeight + "px",
+                        "width": "100%"
                     });
                 }
 

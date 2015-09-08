@@ -3,14 +3,18 @@
     	<div role="heading" tabindex="0" class="h3" aria-level="1">Loading...</div>
     </div>
 </div>
-<div class="lightbox-container clearfix notify">	
-	<div class="lightbox-popup" aria-label="{{_globals._accessibility._ariaLabels.feedbackPopUp}}">
+<div class="lightbox-container clearfix notify">
+	<div class="lightbox-popup lightbox-popup-background">
 		<div class="lightbox-popup-inner">
-			<div class="background-image">
+    		<div class="background-image">
 				<div class="offset">
 					<img src="">
 				</div>
 			</div>
+		</div>
+    </div>	
+	<div class="lightbox-popup" aria-label="{{_globals._accessibility._ariaLabels.feedbackPopUp}}">
+		<div class="lightbox-popup-inner">
 		    <div class="article-block-container">
 				{{!-- the articles and blocks live here --}}
 		    </div>
@@ -19,4 +23,5 @@
 	        </button>
         </div>
     </div>
+
 </div>
