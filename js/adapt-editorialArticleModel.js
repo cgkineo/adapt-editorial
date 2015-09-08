@@ -119,7 +119,7 @@ define([
             _.each(notReadyChildren, function(item){
                 notReadyIds.push(item.get("_id"));
             });
-            console.log(notReadyIds.join(","))
+            //console.log(notReadyIds.join(","))
 
             if (hasNotReadyChildren) return;
 

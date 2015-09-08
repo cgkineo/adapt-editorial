@@ -30,8 +30,6 @@ define([
 
                 this.$el.addClass(linkId);
                 this.$el.attr("data-link", linkId);
-
-                this.updateProgressBars();
             }),
 
             postRender: Backbone.callParents("postRender", function() {
@@ -51,6 +49,8 @@ define([
                 this.$("button[data-link]").on("click", this._onLinkClick);
                 this.$(".text").on("click", this._onLinkClick);
                 $lightboxContainer.find(".close-button").on("click", this._onCloseClick);
+
+                this.updateProgressBars();
 
             }),
 
@@ -131,7 +131,7 @@ define([
                 if (this._lightboxBackground) {
                     $lightboxPopup.addClass("has-background");
                     $backgroundImage.find("img").attr("src", this._lightboxBackground._src);
-                    $backgroundImage.imageready(_.bind(complete, this));
+                    $backgroundImage.imageready(_.bind(complete, this), {allowTimeout:false});
                 } else {
                     $lightboxPopup.removeClass("has-background");
                     $backgroundImage.find("img").attr("src", "");
@@ -185,6 +185,7 @@ define([
             },
 
             resizeLightbox: function() {
+                console.log("lightbox resizing");
                 if (!this._lightboxOpen) return;
                 if (!this._forceResize && !$(window).haveDimensionsChanged(this._windowDimensions)) return;
 
@@ -195,6 +196,7 @@ define([
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
                 var $linkElement = $lightboxContainer.find("."+this._lightboxId);
                 var $lightboxPopup = $lightboxContainer.find(".lightbox-popup");
+                var $lightboxPopupInner = $lightboxContainer.find(".lightbox-popup-inner");
                 var $backgroundImage = $lightboxContainer.find(".background-image");
                 var $backgroundImageTag = $backgroundImage.find("img");
 
@@ -204,6 +206,49 @@ define([
                 var contentMiddle = (availableHeight) / 2;
                 var linkAreaOffsetTop = (contentMiddle - (linkAreaHeight / 2));
 
+
+                if (this._lightboxHasSized && this._lightboxCurrentAvailableHeight === availableHeight && !this._lightbox._fullscreen) {
+                    if (this._lightboxFullsize) return;
+                    if (!this._lightboxFullsize && availableHeight >= this._lightboxCurrentOffsetTop + linkAreaHeight) return;
+                }
+
+
+                this._lightboxHasSized = true;
+                this._lightboxFullsize = false;
+                this._lightboxCurrentOffsetTop = linkAreaOffsetTop;
+                this._lightboxCurrentAvailableHeight = availableHeight;
+
+                if (availableHeight < linkAreaHeight || this._lightbox._fullscreen) {
+
+                    $lightboxPopup.css({
+                        "top": "0px",
+                        "bottom": "0px",
+                        "overflow-y": "scroll",
+                        "height": "100%"
+                    });
+                    $lightboxPopupInner.css({
+                        "min-height": "100%"
+                    });
+                    this._lightboxFullsize = true;
+                    
+                } else {
+
+                    $linkElement.css({
+                        "min-height": "100%"
+                    })
+                    
+                    $lightboxPopup.css({
+                        "top": linkAreaOffsetTop + "px",
+                        "bottom": "",
+                        "height": "",
+                        "overflow-y": "hidden"
+                    });
+
+                    $lightboxPopupInner.css({
+                        "min-height": ""
+                    });
+                }
+
                 if (this._lightboxBackground) {
                     $backgroundImage.backgroundImage({
                         "size": this._lightboxBackground._size,
@@ -211,36 +256,6 @@ define([
                         "restrict": this._lightboxBackground._restrict
                     });
                 }
-
-                if (this._lightboxHasSized && this._lightboxCurrentAvailableHeight === availableHeight) {
-                    if (this._lightboxFullsize) return;
-                    if (!this._lightboxFullsize && availableHeight >= this._lightboxCurrentOffsetTop + linkAreaHeight) return;
-                }
-
-                this._lightboxHasSized = true;
-                this._lightboxFullsize = false;
-                this._lightboxCurrentOffsetTop = linkAreaOffsetTop;
-                this._lightboxCurrentAvailableHeight = availableHeight;
-
-                if (availableHeight < linkAreaHeight || this._lightbox._fullsize) {
-                    $lightboxPopup.css({
-                        "top": "0px",
-                        "bottom": "0px",
-                        "overflow-y": "scroll"
-                    });
-                    this._lightboxFullsize = true;
-                    return;
-                }
-
-                $linkElement.css({
-                    "min-height": "100%"
-                })
-                
-                $lightboxPopup.css({
-                    "top": linkAreaOffsetTop + "px",
-                    "bottom": "",
-                    "overflow-y": "hidden"
-                });
 
             },
 
@@ -309,7 +324,7 @@ define([
                 }));
 
                 var completeComponents = new Backbone.Collection(componentModels.where({
-                    _isInteractionComplete: true
+                    _isComplete: true
                 }));
 
                 var percentageComplete = 100;

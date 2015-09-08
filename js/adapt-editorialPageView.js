@@ -23,7 +23,7 @@ define([
                     var $parentContainer;
                     var $article = new ChildView({model:model}).$el;
                     
-                    var isEditorialLightbox = model.get("_editorial") && model.get("_editorial")._isLightbox;
+                    var isEditorialLightbox = model.get("_editorial") && model.get("_editorial")._isEnabled && model.get("_editorial")._isLightbox;
                     if (isEditorialLightbox) {
                         $parentContainer = $lightbox;
                         $article.attr("name", model.get("_id"));
@@ -59,7 +59,7 @@ define([
                 }
             }
             linkIds = _.uniq(linkIds);
-            console.log(linkIds);
+            //console.log(linkIds);
         }
 
     };

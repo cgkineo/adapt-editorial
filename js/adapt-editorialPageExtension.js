@@ -14,7 +14,7 @@ define([
     var ViewInitialize = PageView.prototype.initialize;
     PageView.prototype.initialize = function(options) {
         var hasEditorialChildren = this.model.getChildren().filter(function(item) {
-            return item.get("_editorial") !== undefined;
+            return item.get("_editorial") !== undefined && item.get("_editorial")._isEnabled;
         });
         if (hasEditorialChildren.length > 0) {
             //extend the pageView with new functionality
