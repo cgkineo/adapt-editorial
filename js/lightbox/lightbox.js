@@ -209,7 +209,8 @@ define([
                         this._lightbox._fullscreen = true;
                     } else {
                         this._lightbox._fullscreen = false;
-                        linkAreaHeight = parseInt(this._lightbox._minHeight["_"+Adapt.device.screenSize]);
+                        var minHeight = parseInt(this._lightbox._minHeight["_"+Adapt.device.screenSize]);
+                        if (minHeight > linkAreaHeight) linkAreaHeight = minHeight;
                     }
                 }
 
@@ -349,6 +350,13 @@ define([
                 this._editorialArticleView.$("."+linkId+" .lightbox-link-progress-bar").css({
                     "width": percentageComplete +"%"
                 });
+
+                if (Adapt.course.get("_globals") && Adapt.course.get("_globals")._extensions && Adapt.course.get("_globals")._extensions._editorial) {
+                    var ariaLabel = Adapt.course.get("_globals")._extensions._editorial.progressIndicatorBar;
+                    var ariaLabelInstructions = Adapt.course.get("_globals")._extensions._editorial.progressIndicatorBarIncompleteInstructions;
+                    var $ariaLabel = this._editorialArticleView.$("."+linkId+" .lightbox-link-progress-bar .aria-label");
+                    $ariaLabel.html(ariaLabel + " " + percentageComplete + "%. " + (percentageComplete == 100 ? "" : ariaLabelInstructions));
+                }
             },
 
             onResize: Backbone.callParents("onResize", function() {
