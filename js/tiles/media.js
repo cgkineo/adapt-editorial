@@ -40,7 +40,7 @@ define([
                 //space between text and media
                 if (styleObject['_spaceBetween']) {
             
-                    styleObject._textMargin = parseInt(styleObject._spaceBetween);
+                    styleObject._textMargin = parseInt(styleObject._spaceBetween) + "px"
                    
                 }
 
