@@ -2,31 +2,42 @@
 .tile.text {
 
 	.text-inner {
-		padding: 0 0px 18px 0px;
+		padding: 18px;
 	}
 		
 	.title {
   //   	font-size: 26px;
 		// font-weight: 300;
   //   	line-height: 120%;
-    	padding: 0 0 20px 0;
+    	padding: 0;
     	color: @primary-color;
     	.component-title;
 	}
+
 	.body {
 		// font-size: larger;
 		// line-height: 120%;
-		padding: 0 0 20px 0;
+		padding: 20px 0 0 0;
 		color: @secondary-color;
 		.body-text;
 	}
+
 	.instruction {
 		// font-weight: bold;
 		// line-height: 120%;
-		padding: 0 0 20px 0;
+		padding: 20px 0 0 0;
 		color: @secondary-color;
 		.instruction-text;
 	}
+
+	.lightbox-link-progress {
+        border: 2px solid @secondary-color;
+        height: 9px;
+        .lightbox-link-progress-bar {
+        	height: 9px;
+            background-color: @primary-color;
+        }
+    }
 
 }
 
@@ -49,6 +60,14 @@
 
 	.instruction {
 		position: relative;
+	}
+
+	.background {
+		position:absolute;
+		top:0px;
+		left:0px;
+		bottom:0px;
+		right:0px;
 	}
 
 }

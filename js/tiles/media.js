@@ -25,13 +25,16 @@ define([
                 var styleObject = this.model.toJSON();
 
                 //set the ratio of text to media
-                if (styleObject['_textPortion']) {
+                if (styleObject['_textPortion'] && (styleObject._textPosition == "left" || styleObject._textPosition == "right")) {
                 
                     styleObject._textPortion = parseInt(styleObject._textPortion);
-                    styleObject._mediaPortion = (100 - styleObject._textPortion) + "px";
+                    styleObject._mediaPortion = (100 - styleObject._textPortion) + "%";
                     styleObject._textPortion+="%";
 
 
+                } else {
+                    styleObject._mediaPortion = "";
+                    styleObject._textPortion = "";
                 }
 
                 //space between text and media
@@ -84,9 +87,29 @@ define([
                     "background-color": textRoundedCorderColor
                 });
 
+                var mediaPortion = styleObject._hasText ? styleObject._mediaPortion || "" : "";
+                this.$(".media").css({
+                    width: mediaPortion
+                });
+
                 var textBackgroundColor = styleObject._textBackgroundColor || "";
                 this.$(".text .background").css({ 
                     "background-color": textBackgroundColor
+                });
+
+                var textTitleColor = styleObject._textTitleColor || "";
+                this.$(".text .title").css({ 
+                    "color": textTitleColor
+                });
+
+                var textBodyColor = styleObject._textBodyColor || "";
+                this.$(".text .body").css({ 
+                    "color": textBodyColor
+                });
+
+                var textInstructionColor = styleObject._textInstructionColor || "";
+                this.$(".text .instruction").css({ 
+                    "color": textInstructionColor
                 });
 
                 this.checkIfTextIsBiggerThanImage();

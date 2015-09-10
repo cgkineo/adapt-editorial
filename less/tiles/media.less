@@ -14,22 +14,35 @@
   //   	font-size: 26px;
 		// font-weight: 300;
   //   	line-height: 120%;
-    	padding: 0 0 20px 0;
+    	padding: 0;
     	color: @primary-color-inverted;
     	.component-title;
+
+    	.lightbox-link {
+    		position: absolute;
+    		top: 50%;
+    		margin-top: -30px;
+    	}
+
+    	.title-text.link {
+    		margin-left: 50px;
+    		padding-left: 10px;
+    		border-left: 2px solid #fff;
+    	}
 	}
 	
 	.body {
 		// font-size: larger;
 		// line-height: 120%;
-		padding: 0 0 20px 0;
+		padding: 20px 0 0 0;
 		color: @primary-color-inverted;
 		.body-text;
 	}
+
 	.instruction {
 		// font-weight: bold;
 		// line-height: 120%;
-		padding: 0 0 20px 0;
+		padding: 20px 0 0 0;
 		color: @primary-color-inverted;
 		.instruction-text;
 	}
@@ -37,6 +50,13 @@
 	.background {
 		background-color: @primary-color;
 	}
+
+    .lightbox-link-progress {
+        border: 2px solid white;
+        .lightbox-link-progress-bar {
+            background-color: white;
+        }
+    }
 
 }
 

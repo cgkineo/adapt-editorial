@@ -78,11 +78,12 @@ define([
                 var hasText = false;
                 var model = this.model.toJSON();
                 for (var k in model) {
+                    if (k == "defaults") continue;
                     switch (k.slice(0,1)) {
                     case "_": case "@": case "#":
                         break;
                     default:
-                        hasText = true;
+                        if (model[k]) hasText = true;
                         break;
                     }
                 }
