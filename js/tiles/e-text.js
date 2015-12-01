@@ -7,13 +7,18 @@ define([
 
     	View: LightboxTile.View.extend({
 
-            classes: Backbone.callParents("classes", function() {
+            classes: Backbone.ascend("classes", function() {
                 return [
                     "content"
                 ];
             }),
 
-            renderStyle: Backbone.callParents("renderStyle", function(styleObject) {
+            renderStyle: Backbone.descend("renderStyle", function(styleObject) {
+
+                var textRoundedCorderColor = styleObject._textRoundedCornerColor || "";
+                 this.$(".text").css({ 
+                    "background-color": textRoundedCorderColor
+                });
 
                 var textBackgroundColor = styleObject._textBackgroundColor || "";
                 this.$(".text .background").css({ 
@@ -25,6 +30,11 @@ define([
                     "color": textTitleColor
                 });
 
+                var textTitleFontSize = styleObject._textTitleFontSize || "";
+                this.$(".text .title").css({ 
+                    "font-size": textTitleFontSize
+                });
+
                 var textBodyColor = styleObject._textBodyColor || "";
                 this.$(".text .body").css({ 
                     "color": textBodyColor
@@ -34,13 +44,25 @@ define([
                 this.$(".text .instruction").css({ 
                     "color": textInstructionColor
                 });
+
+                var textHeight = "";
+                if (!textHeight && styleObject._fillHeight) {
+                    var contentPadding = parseInt(this.$(".content").css("padding-bottom")) + parseInt(this.$(".content").css("padding-top"));
+                    var tileInnerSpace = this.$el.innerHeight();
+                    var textFillHeight = (tileInnerSpace - contentPadding);
+                    textHeight = ( textFillHeight ) + "px";
+                }
+                this.$(".text").css({ 
+                    height: textHeight
+                });
+
             })
 
         }),
 
         Model: LightboxTile.Model.extend({
 
-            defaults: Backbone.callParents("defaults", function() {
+            defaults: Backbone.ascend("defaults", function() {
                 return {
                     "#showText": "true,true,true,true"
                 };

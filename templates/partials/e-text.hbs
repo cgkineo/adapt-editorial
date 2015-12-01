@@ -7,7 +7,7 @@
 					<button tabindex="-1" class="a11y-ignore lightbox-icon">{{#if _iconGraphic}}<img class="icon-default" src="{{{_iconGraphic.src}}}"><img class="icon-hover" src="{{{_iconGraphic.hoverSrc}}}">{{else}}{{_linkText}}{{/if}}</button>
 				</div>
 			{{/if}}
-			<div class="title-text {{#if _linkId}}link{{/if}}" aria-level="4" tabindex="0">{{{title}}}</div>
+			<div class="title-text {{#if _linkId}}link{{/if}}" role="heading" aria-level="2" tabindex="0">{{{title}}}</div>
 		</div>
 	{{/if}}
 	{{#if body}}
@@ -22,7 +22,12 @@
 	{{/if}}
 	{{#if _linkId}}
 		<div class="lightbox-link-progress-container">
-			<div class="lightbox-link-progress"><div class="lightbox-link-progress-bar"><button class="aria-label prevent-default"></button></div></div>
+			<div class="lightbox-link-progress">
+			{{!-- <div class="lightbox-link-progress-bar"><button class="aria-label prevent-default"></button></div> --}}
+				<a href="#" role="button" class="lightbox-link-progress-incomplete">{{_globals._accessibility._ariaLabels.launch}}<span class="fa fa-external-link"></span></a>
+				<a href="#" role="button" class="lightbox-link-progress-visited">{{_globals._accessibility._ariaLabels.incomplete}}<span class="fa fa-external-link"></span></a>
+				<a href="#" role="button" class="lightbox-link-progress-complete">{{_globals._accessibility._ariaLabels.complete}}<span class="fa fa-check-square-o"></span></a>
+			</div>
 		</div>
 		<div class="lightbox-link lightbox-link-center display-none">
 			<button data-link="{{_linkId}}">{{_linkText}}</button>

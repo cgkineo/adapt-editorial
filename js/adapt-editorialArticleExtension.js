@@ -13,7 +13,9 @@ define([
     var $lightbox;
 
     Adapt.on("app:dataReady", function() {
-        $lightboxDivs = $(Handlebars.templates['e-lightbox']({}));
+        $lightboxDivs = $(Handlebars.templates['e-lightbox']({
+            "_globals": Adapt.course.get("_globals")
+        }));
         $("body").append($lightboxDivs);
         $lightbox = $lightboxDivs.filter(".lightbox-container");
     });

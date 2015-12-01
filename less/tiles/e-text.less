@@ -2,7 +2,7 @@
 .tile.text {
 
 	.text-inner {
-		padding: 18px;
+		//padding: 18px;
 	}
 		
 	.title {
@@ -25,20 +25,19 @@
 	.instruction {
 		// font-weight: bold;
 		// line-height: 120%;
-		padding: 20px 0 0 0;
+		padding: 20px 0 10px 0;
 		color: @secondary-color;
 		.instruction-text;
 	}
 
-	.lightbox-link-progress {
-        border: 2px solid @secondary-color;
-        height: 9px;
-        .lightbox-link-progress-bar {
-        	height: 9px;
-            background-color: @primary-color;
-        }
-    }
-
+	// .lightbox-link-progress {
+ //        border: 2px solid white;
+ //        height: 9px;
+ //        .lightbox-link-progress-bar {
+ //        	height: 9px;
+ //            background-color: white;
+ //        }
+ //    }
 }
 
 
@@ -70,4 +69,12 @@
 		right:0px;
 	}
 
+
+	&[textrounded="true"] {
+
+		.background {
+			border-radius: 8px 8px 8px 8px;
+		}
+
+	}
 }

@@ -20,7 +20,7 @@ define([
             _isPlaying: false,
             _forceResize: true,
 
-            onInitialize: Backbone.callParents("onInitialize", function() {
+            onInitialize: Backbone.ascend("onInitialize", function() {
                 this.onPause();
                 this._isTouch = Modernizr.touch;
                 this._onFadeInOut = _.debounce(_.bind(this.onFadeInOut, this), 100);
@@ -120,7 +120,7 @@ define([
                 });
             },
 
-            postRender: Backbone.callParents("postRender", function() {
+            postRender: Backbone.ascend("postRender", function() {
                 this.setupPlayer();
             }),
 
@@ -175,7 +175,7 @@ define([
                 }, this));
             },
 
-            onRemove: Backbone.callParents("onRemove", function() {
+            onRemove: Backbone.descend("onRemove", function() {
                 if ($("html").is(".ie8")) {
                     var obj = this.$("object")[0];
                     if(obj) {
@@ -258,7 +258,7 @@ define([
                 }
             },
 
-            onResize: Backbone.callParents("onResize", function() {
+            onResize: Backbone.ascend("onResize", function() {
                 
                 this.toggleText();
 
@@ -266,7 +266,7 @@ define([
                 $(window).resize();
             }),
 
-            getCalculatedStyleObject: Backbone.callParents("getCalculatedStyleObject", function() {
+            getCalculatedStyleObject: Backbone.ascend("getCalculatedStyleObject", function() {
                 var styleObject = this.model.toJSON();
 
                 switch (styleObject._textPosition) {
@@ -296,7 +296,7 @@ define([
         }),
 
         Model: MediaTile.Model.extend({
-            defaults: Backbone.callParents("defaults", function() {
+            defaults: Backbone.ascend("defaults", function() {
                 return {
                     "#mediaRestrict": "100% 100%,100% 100%,100% 100%,100% 100%",
                     "#mediaSize": "100% auto,100% auto,100% auto,100% auto",

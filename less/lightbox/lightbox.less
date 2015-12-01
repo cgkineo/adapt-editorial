@@ -1,6 +1,7 @@
 .tile {
-    &[data-link] {
-        .text {
+    
+    &.image[data-link] {
+
             cursor: pointer;
             .no-touch &:hover {
                 .icon-default {
@@ -10,7 +11,21 @@
                     display: block;
                 }
             }
-        }
+
+    }
+
+    &.text[data-link] {
+
+            cursor: pointer;
+            .no-touch &:hover {
+                .icon-default {
+                    display: none;
+                }
+                .icon-hover {
+                    display: block;
+                }
+            }
+
     }
 
     .lightbox-link {
@@ -63,6 +78,47 @@
             color: @primary-color-inverted;
         }
     }
+
+    &.incomplete {
+        .lightbox-link-progress-incomplete {
+            display: block;
+        }
+        .lightbox-link-progress-visited {
+            display: none;
+        }
+        .lightbox-link-progress-complete {
+            display:none;
+        }
+    }
+    &.visited.incomplete, &.partially-complete {
+        .lightbox-link-progress-incomplete {
+            display: none;
+        }
+        .lightbox-link-progress-visited {
+            display: block;
+        }
+        .lightbox-link-progress-complete {
+            display:none;
+        }
+    }
+    &.complete {
+        .lightbox-link-progress-incomplete {
+            display: none;
+        }
+        .lightbox-link-progress-visited {
+            display: none;
+        }
+        .lightbox-link-progress-complete {
+            display:block;
+        }
+    }
+
+    .lightbox-link-progress {
+        a {
+            text-decoration: inherit;
+            color: inherit;
+        }
+    }
 }
 
 .lightbox-loading {
@@ -103,13 +159,16 @@
 	left: 0;
 	bottom: 0;
 	width: 100%;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    height: 100%;
+    .iPhone &, .iPad & {
+        height: 108%;
+        position: absolute;
+    }
     z-index:549;
     
     .lightbox-popup {
         z-index:550;
-        max-height: 100%;
+        height: 100%;
         max-width: 100%;
         overflow-y: auto;
         position: relative;
@@ -159,6 +218,16 @@
     }
 }
 
+.ie & {
+    .lightbox-container {
+        .lightbox-popup {
+            .lightbox-popup-inner {
+                max-width: 100%!important;
+            }
+        }
+    }
+}
+
 .tile {
     .lightbox-link-center {
         position: absolute;
@@ -178,18 +247,18 @@
         padding-top: 10px;
         .lightbox-link-progress {
             position: absolute;
-            border: 2px solid white;
-            height: 9px;
-            width: 100px;
+            //border: 2px solid white;
+            //height: 9px;
+            //width: 100px;
             right: 16px;
             bottom: 16px;
-            border-radius: 6px;
-            overflow: hidden;
-            .lightbox-link-progress-bar {
-                height: 9px;
-                width: 0%;
-                background-color: white;
-            }
+            //border-radius: 6px;
+            //overflow: hidden;
+            // .lightbox-link-progress-bar {
+            //     height: 9px;
+            //     width: 0%;
+            //     background-color: white;
+            // }
         }
     }
 }

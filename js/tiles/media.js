@@ -13,7 +13,7 @@ define([
 
             mediaSelector: ".media-item",
 
-            classes: Backbone.callParents("classes", function() {
+            classes: Backbone.ascend("classes", function() {
                 return [
                     "media",
                     "content",
@@ -21,7 +21,7 @@ define([
                 ];
             }),
 
-            getCalculatedStyleObject: Backbone.callParents("getCalculatedStyleObject", function() {
+            getCalculatedStyleObject: Backbone.ascend("getCalculatedStyleObject", function() {
                 var styleObject = this.model.toJSON();
 
                 //set the ratio of text to media
@@ -47,72 +47,12 @@ define([
                 return styleObject;
             }),
 
-            renderStyle: Backbone.callParents("renderStyle", function(styleObject) {
+            renderStyle: Backbone.descend("renderStyle", function(styleObject) {
 
                 var contentHeight = styleObject._contentHeight ? styleObject._contentHeight+"px" : "";
                 this.$(".content").css({ 
                     height: contentHeight
                 });
-
-                var textWidth = "";
-                var textHeight = "";
-                var textRoundedCorderColor = styleObject._textRoundedCornerColor || "";
-                var textMargin = "";
-                if (styleObject._textPosition=="left"||styleObject._textPosition=="right") {
-                    textWidth = styleObject._textPortion || "";
-                }
-                if (styleObject._textPosition=="top"||styleObject._textPosition=="bottom") {
-                    textHeight = styleObject._textPortion || ""
-                }
-                switch (styleObject._textPosition) {
-                case "top":
-                    textMargin = "0 0 " + styleObject._textMargin + "px 0";
-                    break;
-                case "left":
-                    textMargin = "0 " + styleObject._textMargin + "px 0 0";
-                    break;
-                case "bottom":
-                    textMargin = styleObject._textMargin + "px 0 0 0";
-                    break;
-                case "right":
-                    textMargin = "0 0 0 " + styleObject._textMargin + "px";
-                    break;
-                }
-                this.$(".text").css({ 
-                    position: styleObject._offsetTop ? "absolute" : "",
-                    bottom: styleObject._offsetTop ? "0px" : "",
-                    width: textWidth,
-                    height: textHeight,
-                    margin: textMargin,
-                    "background-color": textRoundedCorderColor
-                });
-
-                var mediaPortion = styleObject._hasText ? styleObject._mediaPortion || "" : "";
-                this.$(".media").css({
-                    width: mediaPortion
-                });
-
-                var textBackgroundColor = styleObject._textBackgroundColor || "";
-                this.$(".text .background").css({ 
-                    "background-color": textBackgroundColor
-                });
-
-                var textTitleColor = styleObject._textTitleColor || "";
-                this.$(".text .title").css({ 
-                    "color": textTitleColor
-                });
-
-                var textBodyColor = styleObject._textBodyColor || "";
-                this.$(".text .body").css({ 
-                    "color": textBodyColor
-                });
-
-                var textInstructionColor = styleObject._textInstructionColor || "";
-                this.$(".text .instruction").css({ 
-                    "color": textInstructionColor
-                });
-
-                this.checkIfTextIsBiggerThanImage();
 
                 var size = (styleObject['_mediaSize'] || "auto auto");
                 var position = (styleObject['_mediaPosition'] || "top left");
@@ -127,6 +67,92 @@ define([
                     "dynamicRatio": dynamicRatio,
                     "expandContainerHeight": this.model.get("_textBigger")
                 });
+
+                var textWidth = "";
+                var textHeight = "";
+                var textRoundedCorderColor = styleObject._textRoundedCornerColor || "";
+                var textMarginTop = "";
+                var textMarginLeft = "";
+                var textMarginBottom = "";
+                var textMarginRight = "";
+                if (styleObject._textPosition=="left"||styleObject._textPosition=="right") {
+                    textWidth = styleObject._textPortion || "";
+                }
+                if (styleObject._textPosition=="top"||styleObject._textPosition=="bottom") {
+                    textHeight = "";
+                    if (styleObject._fillHeight) {
+                        var contentPadding = parseInt(this.$(".content").css("padding-bottom")) + parseInt(this.$(".content").css("padding-top"));
+                        var tileInnerSpace = this.$el.innerHeight();
+                        var mediaOuterHeight = this.$(".media").outerHeight();
+                        var textFillHeight = (tileInnerSpace - contentPadding)- mediaOuterHeight;
+                        textHeight = ( textFillHeight ) + "px";
+                    }
+                }
+                if (styleObject._textMargin) {
+                    switch (styleObject._textPosition) {
+                    case "top":
+                        textMargin = "0 0 " + styleObject._textMargin + "px 0";
+                        textMarginBottom = styleObject._textMargin;
+                        break;
+                    case "left":
+                        textMargin = "0 " + styleObject._textMargin + "px 0 0";
+                        textMarginRight = styleObject._textMargin;
+                        break;
+                    case "bottom":
+                        textMargin = styleObject._textMargin + "px 0 0 0";
+                        textMarginTop = styleObject._textMargin;
+                        break;
+                    case "right":
+                        textMargin = "0 0 0 " + styleObject._textMargin + "px";
+                        textMarginLeft = styleObject._textMargin;
+                        break;
+                    }
+                }
+                this.$(".text").css({ 
+                    position: styleObject._offsetTop ? "absolute" : "",
+                    bottom: styleObject._offsetTop ? "0px" : "",
+                    width: textWidth,
+                    height: textHeight,
+                    "margin-top": textMarginTop,
+                    "margin-left": textMarginLeft,
+                    "margin-bottom": textMarginBottom,
+                    "margin-right": textMarginRight,
+                    "background-color": textRoundedCorderColor
+                });
+
+                var mediaPortion = styleObject._hasText ? styleObject._mediaPortion || "" : "";
+                this.$(".media").css({
+                    "width": mediaPortion
+                });
+
+                var textBackgroundColor = styleObject._textBackgroundColor || "";
+                this.$(".text .background").css({ 
+                    "background-color": textBackgroundColor
+                });
+
+                var textTitleColor = styleObject._textTitleColor || "";
+                this.$(".text .title").css({ 
+                    "color": textTitleColor
+                });
+
+                var textTitleFontSize = styleObject._textTitleFontSize || "";
+                this.$(".text .title").css({ 
+                    "font-size": textTitleFontSize
+                });
+
+                var textBodyColor = styleObject._textBodyColor || "";
+                this.$(".text .body").css({ 
+                    "color": textBodyColor
+                });
+
+                var textInstructionColor = styleObject._textInstructionColor || "";
+                this.$(".text .instruction").css({ 
+                    "color": textInstructionColor
+                });
+
+                this.checkIfTextIsBiggerThanImage();
+
+                
 
             }),
 
@@ -161,7 +187,7 @@ define([
 
         Model: LightboxTile.Model.extend({
 
-            defaults: Backbone.callParents("defaults", function() {
+            defaults: Backbone.ascend("defaults", function() {
                 return {
                     "#showText": "true,true,true,true",
                     "#textPosition": "bottom,bottom,bottom,bottom",

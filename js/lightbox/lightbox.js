@@ -19,8 +19,9 @@ define([
             _animationDuration: 400,
             _windowDimensions: null,
             _forceResize: true,
+            _iOS: /iPad|iPhone|iPod/.test(navigator.platform),
 
-            onInitialize: Backbone.callParents("onInitialize", function() {
+            onInitialize: Backbone.ascend("onInitialize", function() {
                 var linkId = this.model.get("_linkId");
                 if (!linkId) return;
 
@@ -32,7 +33,7 @@ define([
                 this.$el.attr("data-link", linkId);
             }),
 
-            postRender: Backbone.callParents("postRender", function() {
+            postRender: Backbone.ascend("postRender", function() {
                 var linkId = this.model.get("_linkId");
                 if (!linkId) return;
 
@@ -43,11 +44,23 @@ define([
                     this._forceResize = true;
                     this.resizeLightbox();
                 }, this);
+                this._forceResizeLightboxDebounce = _.debounce(this._forceResizeLightbox, 250);
 
                 var $lightboxContainer = this._editorialArticleView.$lightbox;
 
                 this.$("button[data-link]").on("click", this._onLinkClick);
-                this.$(".text").on("click", this._onLinkClick);
+                
+                switch (this.model.get("_type")) {
+                case "video":
+                    this.$(".text").on("click", this._onLinkClick);
+                    break;
+                case "text":
+                case "image":
+                    this.$el.on("click", this._onLinkClick);
+                    break;
+                }
+
+                
                 $lightboxContainer.find(".close-button").on("click", this._onCloseClick);
 
                 this.updateProgressBars();
@@ -55,7 +68,11 @@ define([
             }),
 
             onLinkClick: function(event) {
+                event.preventDefault();
                 if (this._lightboxOpen) return;
+
+                var linkId = this.model.get("_linkId");
+                this._editorialArticleView.$("."+linkId).addClass('visited');
 
                 $('video,audio').trigger('pause');
 
@@ -145,6 +162,7 @@ define([
                     this._forceResize = true;
                     $(window).resize();
                     $(window).on("resize", this._resizeLightbox);
+                    $(window).on("scroll", this._forceResizeLightboxDebounce);
 
                     this._lightboxOpen = true;
 
@@ -165,7 +183,8 @@ define([
                                 "opacity": 1
                             },{
                                 "delay": 100,
-                                "duration": this._animationDuration
+                                "duration": this._animationDuration,
+                                "complete": complete
                             });
 
                         } else {
@@ -174,10 +193,15 @@ define([
                                 "visibility": "visible"
                             });
 
+                            complete();
                         }                
 
-                        Adapt.trigger('popup:opened',$lightboxPopup);
-                        $('body').scrollDisable();
+                        function complete() {
+                            Adapt.trigger('popup:opened',$lightboxPopup.find(".popup"));
+                            $('body').scrollDisable();
+                            $lightboxPopup.find(".popup [tabindex='0']").a11y_focus();
+                            $(window).scroll();
+                        }
 
                     }, this), 250);
                 }
@@ -185,7 +209,6 @@ define([
             },
 
             resizeLightbox: function() {
-                console.log("lightbox resizing");
                 if (!this._lightboxOpen) return;
                 if (!this._forceResize && !$(window).haveDimensionsChanged(this._windowDimensions)) return;
 
@@ -214,7 +237,7 @@ define([
                     }
                 }
 
-                var availableHeight = $lightboxContainer.height();
+                var availableHeight = $(window).height(); //$lightboxContainer.height();
                 var navigationHeight = $(".navigation").outerHeight();
                 var contentMiddle = (availableHeight) / 2;
                 var linkAreaOffsetTop = (contentMiddle - (linkAreaHeight / 2));
@@ -224,15 +247,16 @@ define([
                 this._lightboxCurrentOffsetTop = linkAreaOffsetTop;
                 this._lightboxCurrentAvailableHeight = availableHeight;
 
-                if (availableHeight < linkAreaHeight || this._lightbox._fullscreen) {
+                if (availableHeight < linkAreaHeight || this._lightbox._fullscreen || $("html").is(".touch") ) {
 
                     $lightboxPopupBackground.css({
                         "height": ""
                     });
+                    var topOffset = $(window).scrollTop() + "px";
+                    if (!this._iOS) topOffset = "0px";
                     $lightboxPopup.css({
-                        "top": "0px",
-                        "bottom": "0px",
-                        "overflow-y": "scroll",
+                        "top": topOffset,
+                        "overflow-y": "auto",
                         "height": "100%"
                     });
                     $lightboxPopupInner.css({
@@ -247,8 +271,10 @@ define([
                         "min-height": "100%"
                     })
                     
+                    var topOffset = linkAreaOffsetTop + $(window).scrollTop() + "px";
+                    if (!this._iOS) topOffset = linkAreaOffsetTop + "px";
                     $lightboxPopup.css({
-                        "top": linkAreaOffsetTop + "px",
+                        "top": topOffset,
                         "bottom": "",
                         "height": "",
                         "overflow-y": "hidden"
@@ -289,6 +315,7 @@ define([
                 var $articleBlockContainer = $lightboxContainer.find(".article-block-container");
 
                 $articleBlockContainer.off("resize", this._forceResizeLightbox);
+                $(window).off("scroll", this._forceResizeLightboxDebounce);
 
 
 
@@ -347,6 +374,17 @@ define([
                     percentageComplete = (completeComponents.length / componentModels.length ) * 100;
                 }
 
+                if (percentageComplete == 0) {
+                    this._editorialArticleView.$("."+linkId).removeClass("complete").addClass('incomplete');
+                } else if (percentageComplete > 0 && percentageComplete < 100) {
+                    this._editorialArticleView.$("."+linkId).removeClass("incomplete").addClass('partially-complete visited');
+                } else if (percentageComplete == 100) {
+                    this._editorialArticleView.$("."+linkId).removeClass("incomplete partially-complete").addClass('complete visited');
+                }
+
+
+                this._editorialArticleView.$("."+linkId).addClass()
+
                 this._editorialArticleView.$("."+linkId+" .lightbox-link-progress-bar").css({
                     "width": percentageComplete +"%"
                 });
@@ -359,13 +397,13 @@ define([
                 }
             },
 
-            onResize: Backbone.callParents("onResize", function() {
+            onResize: Backbone.ascend("onResize", function() {
                 if (!this._lightboxOpen) return;
                 if (!$(window).haveDimensionsChanged(this._windowDimensions)) return;
                 this.resizeLightbox();
             }),
 
-            getCalculatedStyleObject: Backbone.callParents("getCalculatedStyleObject", function(styleObject) {
+            getCalculatedStyleObject: Backbone.ascend("getCalculatedStyleObject", function(styleObject) {
                 var styleObject = this.model.toJSON();
                 
                 var linkId = this.model.get("_linkId");
@@ -383,7 +421,7 @@ define([
                 }
             }),
 
-            onRemove: Backbone.callParents("onRemove", function() {
+            onRemove: Backbone.descend("onRemove", function() {
                 var linkId = this.model.get("_linkId");
                 if (!linkId) return;
 
@@ -403,7 +441,7 @@ define([
 
         Model: Tile.Model.extend({
 
-            defaults: Backbone.callParents("defaults", function() {
+            defaults: Backbone.ascend("defaults", function() {
                 return {
                     "_linkId": null,
                     "_linkText": "Link text",

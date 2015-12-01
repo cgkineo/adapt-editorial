@@ -71,6 +71,7 @@ define([
                 this.listenTo(this._editorialArticleView, "resize", this.preResize);
                 this.listenTo(this._parentView, "resize", this.preResize);
                 this.listenToOnce(this._editorialArticleView, 'remove', this.onRemove);
+                this.listenTo(this, "resize", this.preResize);
 
             },
 
@@ -229,9 +230,9 @@ define([
                     }
 
                     this.$el.attr(oKey.slice(1), value);
-                    var childContainer = this.$(".tile-container");
-                    if (childContainer.length > 0) {
-                        childContainer.attr(oKey.slice(1), value);
+                    var $childContainer = this.$el.find("> .tile-container");
+                    if ($childContainer.length > 0) {
+                        $childContainer.attr(oKey.slice(1), value);
                     }
                     switch(value) {
                     case "no": case "false":
@@ -253,22 +254,39 @@ define([
             getCalculatedStyleObject: function() {
                 var styleObject = this.model.toJSON();
 
-                //tile height/width ratio
-                this.$el.css("min-height", "");
-                if (styleObject['_ratio']) {
-                
-                    styleObject._tileHeight = this.$el.width() * styleObject['_ratio'];
-                    
-                } else if (styleObject['_fillHeight']) {
-                    _.defer(_.bind(function() {
-                        var $parent = this.$el.parent();
-                        var parentHeight = $parent.height();
-                        if (this.$el.height() < parentHeight) {
-                            this.$el.css("min-height", parentHeight);
-                            this.trigger("resize");
-                        }
-                    }, this));
+                var $childContainer = this.$el.find("> .tile-container");
 
+                //tile height/width ratio
+                if (!this._internalResize) {
+                    this.$el.css("min-height", "");
+                    if ($childContainer.length > 0) {
+                        $childContainer.css("min-height","");
+                    }
+                    if (styleObject['_ratio']) {
+                    
+                        styleObject._tileHeight = this.$el.width() * styleObject['_ratio'];
+                        
+                    } else if (styleObject['_fillHeight']) {
+                        _.defer(_.bind(function() {
+                            var $parent = this.$el.parent();
+                            var parentHeight = $parent.height();
+                            if (this.$el.height() < parentHeight) {
+                                this.$el.css("min-height", parentHeight);
+                                if ($childContainer.length > 0) {
+                                    $childContainer.css("min-height",parentHeight);
+                                }
+                                this._internalResize = true;
+                                this.trigger("resize");
+                            }
+                        }, this));
+
+                    }
+                } else this._internalResize = false;
+
+                if (styleObject['_spanColumns'] == styleObject._parentModel.get("_spanColumns") ) {
+                    styleObject._fullWidth = true;
+                } else {
+                    styleObject._fullWidth = false;
                 }
 
                 return styleObject;
@@ -285,6 +303,12 @@ define([
                     "vertical-align": tileVerticalAlign,
                     "background": tileBackground
                 });
+
+                if (styleObject._fullWidth) {
+                    this.$el.attr("fullWidth", true);
+                } else {
+                    this.$el.removeAttr("fullWidth");
+                }
                 
             },
 
@@ -312,6 +336,8 @@ define([
             },
 
             initialize: function() {
+
+                this.set("_globals", Adapt.course.get("_globals"));
 
                 var config = this.toJSON();
                 this.set("defaults", this.defaults());

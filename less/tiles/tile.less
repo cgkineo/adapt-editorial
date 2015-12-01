@@ -1,6 +1,10 @@
 //stylistic
 .tile {
-
+	&.text[data-link] {
+		.text-inner {
+			padding: 18px;
+		}	
+	}
 }
 
 //structural
@@ -22,6 +26,39 @@
 		overflow: hidden;
 	}
 
+	&.media,
+	&.text {	
+		.title {
+			.size-medium &, .size-large & {
+		    	.lightbox-link {
+		    		position: absolute;
+		    		top: 50%;
+		    		margin-top: -20px;
+		    	}
+
+		    	.title-text.link {
+		    		margin-left: 50px;
+		    		padding-left: 10px;
+		    		border-left: 2px solid @white;
+		    	}
+		    }
+		    .size-small & {
+		    	.lightbox-link {
+		    		position: absolute;
+		    		left: 50%;
+		    		margin-left: -20px;
+		    	}
+
+		    	.title-text.link {
+		    		margin-top: 50px;
+		    		padding-top: 10px;
+		    		border-top: 2px solid @white;
+		    		width:100%;
+		    	}
+		    }
+		}
+	}
+	
 }
 
 
