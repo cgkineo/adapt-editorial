@@ -4,21 +4,9 @@ define([
     'coreModels/articleModel',
     './adapt-editorialArticleView',
     './adapt-editorialArticleModel',
-    './authoringmode/authoringMode',
-    './adapt-editorialPageExtension',
     './tiles/tiles'
-], function(Adapt, ArticleView, ArticleModel, ExtensionView, ExtensionModel, AuthoringMode) {
+], function(Adapt, ArticleView, ArticleModel, ExtensionView, ExtensionModel) {
 
-    var authoringModeEnabled = false;
-    var $lightbox;
-
-    Adapt.on("app:dataReady", function() {
-        $lightboxDivs = $(Handlebars.templates['e-lightbox']({
-            "_globals": Adapt.course.get("_globals")
-        }));
-        $("body").append($lightboxDivs);
-        $lightbox = $lightboxDivs.filter(".lightbox-container");
-    });
     /*  
         Here we are extending the articleView and articleModel in Adapt.
         This is to accomodate the new functionality on the article.
@@ -31,10 +19,6 @@ define([
         if (this.model.get("_editorial") && this.model.get("_editorial")._isEnabled && !this.model.get("_editorial")._isLightbox) {
             //extend the articleView with new functionality
             _.extend(this, ExtensionView);
-            this.$lightbox = $lightbox;
-            if (this.model.get("_editorial")._isEnabled && this.model.get("_editorial")._authoringMode) {
-                enableAuthoringMode();
-            }
         }
         //initialize the article in the normal manner
         return ViewInitialize.apply(this, arguments);
@@ -59,15 +43,6 @@ define([
         //initialize the article in the normal manner if no extension
         return ModelInitialize.apply(this, arguments);
     };
-
-
-    function enableAuthoringMode() {
-        if (authoringModeEnabled) return;
-        var model = new AuthoringMode.Model( this.model );
-        var view = new AuthoringMode.View( {model:model} );
-        $("body").append(view.$el);
-        authoringModeEnabled = true;
-    }
 
     
 

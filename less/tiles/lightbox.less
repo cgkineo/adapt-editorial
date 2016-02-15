@@ -121,112 +121,112 @@
     }
 }
 
-.lightbox-loading {
-    position: fixed!important; // Needs to be fixed otherwise loading layout can be incorrect
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-color: @transparency;
-    text-align: center;
-    display:none;
-    z-index: 548;
+// .lightbox-loading {
+//     position: fixed!important; // Needs to be fixed otherwise loading layout can be incorrect
+//     top:0;
+//     left:0;
+//     width:100%;
+//     height:100%;
+//     background-color: @transparency;
+//     text-align: center;
+//     display:none;
+//     z-index: 548;
     
-    .no-opacity & {
-        background-image: @transparency-fallback-png;
-    }
+//     .no-opacity & {
+//         background-image: @transparency-fallback-png;
+//     }
 
-    .loader-gif {
-        background-image: url(assets/ajax-loader.gif);
-        background-repeat: no-repeat;
-        background-position: center;
-        width: 128px;
-        height: 128px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -64px;
-        margin-left: -64px;
-        .item-title;
-    }
-}
+//     .loader-gif {
+//         background-image: url(assets/ajax-loader.gif);
+//         background-repeat: no-repeat;
+//         background-position: center;
+//         width: 128px;
+//         height: 128px;
+//         position: absolute;
+//         top: 50%;
+//         left: 50%;
+//         margin-top: -64px;
+//         margin-left: -64px;
+//         .item-title;
+//     }
+// }
 
 
-.lightbox-container {
-	visibility: hidden;
-	position: fixed;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-    height: 100%;
-    .iPhone &, .iPad & {
-        height: 108%;
-        position: absolute;
-    }
-    z-index:549;
+// .lightbox-container {
+// 	visibility: hidden;
+// 	position: fixed;
+// 	top: 0;
+// 	left: 0;
+// 	bottom: 0;
+// 	width: 100%;
+//     height: 100%;
+//     .iPhone &, .iPad & {
+//         height: 108%;
+//         position: absolute;
+//     }
+//     z-index:549;
     
-    .lightbox-popup {
-        z-index:550;
-        height: 100%;
-        max-width: 100%;
-        overflow-y: auto;
-        position: relative;
-        &.has-background {
-            .block {
-                background-color: transparent;
-            }
-            .article {
-                background-color: transparent;
-            }
-        }
+//     .lightbox-popup {
+//         z-index:550;
+//         height: 100%;
+//         max-width: 100%;
+//         overflow-y: auto;
+//         position: relative;
+//         &.has-background {
+//             .block {
+//                 background-color: transparent;
+//             }
+//             .article {
+//                 background-color: transparent;
+//             }
+//         }
 
-        .lightbox-popup-inner {
-            position:relative;
-            max-width: 1024px;
-            margin: auto;
-            min-height: 100%;
-        }
-    }
-    .lightbox-popup.lightbox-popup-background {
-        position: absolute;
-        width: 100%;
-    }
+//         .lightbox-popup-inner {
+//             position:relative;
+//             max-width: 1024px;
+//             margin: auto;
+//             min-height: 100%;
+//         }
+//     }
+//     .lightbox-popup.lightbox-popup-background {
+//         position: absolute;
+//         width: 100%;
+//     }
 
-    .article-block-container {
-        max-width: 100%;
-        position:relative;
-    }
+//     .article-block-container {
+//         max-width: 100%;
+//         position:relative;
+//     }
 
-    .close-button {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-    }
+//     .close-button {
+//         position: absolute;
+//         top: 0px;
+//         right: 0px;
+//     }
 
-    .background-image {
-        position:absolute;
-        top:0px;
-        left:0px;
-        overflow:hidden;
-        height: 100%;
-        width: 100%;
-        img {
-            max-width: none;
-            position:absolute;
-        }
-    }
-}
+//     .background-image {
+//         position:absolute;
+//         top:0px;
+//         left:0px;
+//         overflow:hidden;
+//         height: 100%;
+//         width: 100%;
+//         img {
+//             max-width: none;
+//             position:absolute;
+//         }
+//     }
+// }
 
-.ie & {
-    .lightbox-container {
-        .lightbox-popup {
-            .lightbox-popup-inner {
-                max-width: 100%!important;
-            }
-        }
-    }
-}
+// .ie & {
+//     .lightbox-container {
+//         .lightbox-popup {
+//             .lightbox-popup-inner {
+//                 max-width: 100%!important;
+//             }
+//         }
+//     }
+// }
 
 .tile {
     .lightbox-link-center {

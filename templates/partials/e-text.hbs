@@ -21,6 +21,11 @@
 		</div>
 	{{/if}}
 	{{#if _linkId}}
+		<div class="lightbox-link-icon">
+			{{#if _linkIcon}}
+				<img src="{{_linkIcon}}" class="a11y-ignore" tabindex="-1" aria-hidden="true" />
+			{{/if}}
+		</div>
 		<div class="lightbox-link-progress-container">
 			<div class="lightbox-link-progress">
 			{{!-- <div class="lightbox-link-progress-bar"><button class="aria-label prevent-default"></button></div> --}}
@@ -30,7 +35,9 @@
 			</div>
 		</div>
 		<div class="lightbox-link lightbox-link-center display-none">
-			<button data-link="{{_linkId}}">{{_linkText}}</button>
+			<button data-link="{{_linkId}}" class="lightbox-link-progress-incomplete">{{_linkTextIncomplete}}<div class="icon icon-controls-right"></div></button>
+			<button data-link="{{_linkId}}" class="lightbox-link-progress-visited">{{_linkTextVisited}}<div class="icon icon-controls-right"></div></button>
+			<button data-link="{{_linkId}}" class="lightbox-link-progress-complete">{{_linkTextComplete}}<div class="icon icon-controls-right"></div></button>
 			{{#if _linkInstruction}}
 				<br />
 				<hr />

@@ -37,35 +37,6 @@ define([
             this.on("tileView:ready", this.onEditorialTileReady);
         },
 
-        addChildren: function() {
-            var $articleBlockContainer = this.$lightbox.find(".article-block-container");
-            var $blockContainer = $articleBlockContainer.find("[name='"+ this.model.get("_id")+"']");
-            if ($blockContainer.length === 0) $blockContainer = $('<div name="' + this.model.get("_id") + '"></div>' );
-            $articleBlockContainer.append( $blockContainer )
-            var nthChild = 0;
-            var children = this.model.getChildren();
-            var models = children.models;
-            for (var i = 0, len = models.length; i < len; i++) {
-                var model = models[i];
-                if (model.get('_isAvailable')) {
-
-                    var components = model.getChildren();
-                    _.each(components.models, function(component) {
-                        if (component.get("_isQuestionType") && component.get("_feedback")) {
-                            component.get("_feedback")._type = "overlay";
-                        }
-                    });
-
-                    nthChild ++;
-                    var ChildView = this.constructor.childView || Adapt.componentStore[model.get("_component")];
-                    //var $parentContainer = this.$(this.constructor.childContainer);
-                    var $parentContainer = $blockContainer;
-                    model.set("_nthChild", nthChild);
-                    $parentContainer.append(new ChildView({model:model}).$el);
-                }
-            }
-        },
-
         addEditorialChildren: function() {
             var editorialModel = this.model.get("_editorialModel");
 

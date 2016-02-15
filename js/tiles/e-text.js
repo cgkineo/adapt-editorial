@@ -1,6 +1,6 @@
 define([
     './tile',
-    '../lightbox/lightbox'
+    './lightbox'
 ], function(Tile, LightboxTile) {
 
     var TextTile = Tile.extend({

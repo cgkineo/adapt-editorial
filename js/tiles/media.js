@@ -1,7 +1,7 @@
 define([
     'coreJS/adapt',
     './tile',
-    '../lightbox/lightbox',
+    './lightbox',
     '../lib/jquery.resize',
     '../lib/jquery.dimensions',
     '../lib/jquery.backgroundImage'
